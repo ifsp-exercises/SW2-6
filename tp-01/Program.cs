@@ -77,7 +77,14 @@ namespace Command
         .UseKestrel()
         .ConfigureKestrel(options =>
         {
-          options.ListenAnyIP(3333);
+          if (!int.TryParse(
+              Environment.GetEnvironmentVariable("APP_PORT"),
+              out var port
+            )
+          )
+            port = 3333;
+
+          options.ListenAnyIP(port);
         })
         .UseStartup<Startup>();
   }

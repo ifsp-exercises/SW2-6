@@ -20,8 +20,12 @@ namespace Command.Data
 
     private void CreateClient()
     {
+      var host = Environment.GetEnvironmentVariable("MONGO_HOST");
+      var username = Environment.GetEnvironmentVariable("MONGO_USER");
+      var password = Environment.GetEnvironmentVariable("MONGO_PASSWORD");
+
       MongoDbManager._mongoClient = new MongoClient(
-        "mongodb://docker:DockerMongo127!@localhost:27017/?authSource=admin"
+        $"mongodb://{username}:{password}@{host}:27017/?authSource=admin"
       );
     }
 
@@ -36,7 +40,7 @@ namespace Command.Data
           //dispose managed resources
         }
       }
-      
+
       //dispose unmanaged resources
       disposed = true;
     }
