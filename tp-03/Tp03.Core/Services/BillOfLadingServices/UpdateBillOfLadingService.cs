@@ -14,7 +14,9 @@ namespace Tp03.Core.Services.BillOfLadingServices
 
     public async Task Execute(BillOfLading billOfLading)
     {
-      var foundBillOfLading = await this._context.BillsOfLading.FindAsync(billOfLading.Id);
+      var foundBillOfLading = await this._context.BillsOfLading
+        .AsNoTracking()
+        .FirstOrDefaultAsync(p => p.Id.Equals(billOfLading.Id));
 
       if (foundBillOfLading == null)
         throw new ArgumentException("Bill of Lading not found");

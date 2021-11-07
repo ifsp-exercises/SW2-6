@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tp03.Core.Data;
 
 namespace Tp03.Core.Migrations
 {
     [DbContext(typeof(Tp03Context))]
-    partial class Tp03ContextModelSnapshot : ModelSnapshot
+    [Migration("20211107211314_AddingTheFuckingRestOfFields")]
+    partial class AddingTheFuckingRestOfFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

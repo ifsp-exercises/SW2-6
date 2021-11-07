@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Tp03.Core.Data;
 using Tp03.Core.Entities;
@@ -18,8 +19,22 @@ namespace Tp03.Core.Services.BillOfLadingServices
       if (foundBillOfLading == null)
         throw new ArgumentException("Bill of Lading not found");
 
-      this._context.BillsOfLading.Remove(foundBillOfLading);
-      await this._context.SaveChangesAsync();
+      var containers = this._context.Containers
+        .Where(c => c.BillOfLandingId.Equals(billOfLading.Id));
+
+      using (var transaction = await this._context.Database.BeginTransactionAsync())
+      {
+        foreach (var container in containers)
+        {
+          this._context.Containers.Remove(container);
+        }
+
+        this._context.BillsOfLading.Remove(foundBillOfLading);
+
+        await this._context.SaveChangesAsync();
+
+        transaction.Commit();
+      }
     }
   }
 }

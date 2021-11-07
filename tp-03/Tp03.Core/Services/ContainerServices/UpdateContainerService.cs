@@ -14,7 +14,9 @@ namespace Tp03.Core.Services.ContainerServices
 
     public async Task Execute(Container container)
     {
-      var foundContainer = await this._context.Containers.FindAsync(container.Id);
+      var foundContainer = await this._context.Containers
+        .AsNoTracking()
+        .FirstOrDefaultAsync(p => p.Id.Equals(container.Id));
 
       if (foundContainer == null)
         throw new ArgumentException("Container not found");

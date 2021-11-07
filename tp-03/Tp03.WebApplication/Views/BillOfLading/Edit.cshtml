@@ -29,6 +29,11 @@
                 <input asp-for="Navio" class="form-control" />
                 <span asp-validation-for="Navio" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="Consignee" class="control-label"></label>
+                <input asp-for="Consignee" class="form-control" />
+                <span asp-validation-for="Consignee" class="text-danger"></span>
+            </div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

@@ -16,10 +16,14 @@ namespace Tp03.Core.Services.ContainerServices
 
     public async Task<IList<Container>> Execute(Container containerFilter = null)
     {
-      var containers = _context.Containers.AsNoTracking();
+      var containers = _context.Containers
+        .AsNoTracking();
 
       if (containerFilter == null)
-        return await containers.ToListAsync();
+      {
+        return await PopulateBillOfLading(containers);
+      };
+
 
       if (containerFilter.Id != Guid.Empty)
         containers = containers.Where(c => c.Id == containerFilter.Id);
@@ -34,7 +38,22 @@ namespace Tp03.Core.Services.ContainerServices
       if (containerFilter.Tamanho != default(decimal))
         containers = containers.Where(c => c.Tamanho == containerFilter.Tamanho);
 
-      return await containers.ToArrayAsync();
+      return await PopulateBillOfLading(containers);
+    }
+
+    private async Task<IList<Container>> PopulateBillOfLading(IQueryable<Container> containers)
+    {
+      var fetchedContainers = await containers.ToListAsync();
+
+      fetchedContainers.ForEach(async container =>
+      {
+        container.BillOfLading = await this._context.BillsOfLading
+          .FirstOrDefaultAsync(billOfLading =>
+            billOfLading.Id.Equals(container.BillOfLandingId)
+          );
+      });
+
+      return fetchedContainers;
     }
   }
 }
