@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -28,8 +29,15 @@ namespace Tp03.WebApplication
     {
       services.AddControllersWithViews();
 
-      services.AddDbContext<Tp03Context>();
+      services.AddDbContext<Tp03Context>(options =>
+        options.UseSqlite(
+          $"Data Source={Configuration.GetValue(typeof(string), "DbPath")}",
+          action => action.MigrationsAssembly("Tp03.Core")
+        )
+      );
+
       services.AddScoped<Tp03Context>();
+
       services.AddScoped<AddContainerService>();
       services.AddScoped<DeleteContainerService>();
       services.AddScoped<ListContainerService>();
@@ -64,7 +72,7 @@ namespace Tp03.WebApplication
       {
         endpoints.MapControllerRoute(
           name: "default",
-          pattern: "{controller=Home}/{action=Index}/{id?}");
+          pattern: "{controller=Container}/{action=Index}/{id?}");
       });
     }
   }
