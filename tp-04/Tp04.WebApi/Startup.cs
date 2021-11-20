@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -45,6 +46,20 @@ namespace Tp04.WebApi
         app.UseDeveloperExceptionPage();
         app.UseSwagger();
         app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Tp04.WebApi v1"));
+      }
+
+      using (
+        var serviceScope = app
+          .ApplicationServices
+          .GetService<IServiceScopeFactory>()
+          .CreateScope()
+      )
+      {
+        var context = serviceScope
+          .ServiceProvider
+          .GetRequiredService<Tp04Context>();
+
+        context.Database.Migrate();
       }
 
       app.UseCors(p => p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
