@@ -5,13 +5,21 @@ networks:
     driver: 'bridge'
 
 services:
+  tp04-db-postgres:
+    restart: always
+    image: postgres:14.1
+    container_name: tp04-db-postgres
+    networks:
+      - tp04-network
+
   tp04-web-api:
-    image: tp04-web-api
+    restart: always
     container_name: tp04-web-api
     build:
       context: ./Tp04.WebApi/
       dockerfile: Dockerfile
     depends_on:
+      - tp04-db-postgres
       - nginx-reverse-proxy
     networks:
       - tp04-network
