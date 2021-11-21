@@ -1,0 +1,26 @@
+version: '3.3'
+
+networks:
+  tp04-network:
+    driver: 'bridge'
+
+services:
+  tp04-web-api:
+    image: tp04-web-api
+    container_name: tp04-web-api
+    build:
+      context: ./Tp04.WebApi/
+      dockerfile: Dockerfile
+    depends_on:
+      - nginx-reverse-proxy
+    networks:
+      - tp04-network
+
+  nginx-reverse-proxy:
+    image: nginx-reverse-proxy
+    container_name: nginx-reverse-proxy
+    build:
+      context: ./Nginx/
+      dockerfile: ./Dockerfile
+    networks:
+      - tp04-network
