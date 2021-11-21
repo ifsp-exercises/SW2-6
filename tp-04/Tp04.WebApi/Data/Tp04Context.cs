@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using Tp04.WebApi.Entities;
 
@@ -9,7 +10,12 @@ namespace Tp04.WebApi.Data
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-      optionsBuilder.UseSqlite("Data Source=tp_04.db");
+      var dbHost = Environment.GetEnvironmentVariable("DB_HOST") ?? "localhost";
+
+      var connectionString =
+        $"Host={dbHost};Database=tp04;Username=tp04;Password=DockerPostgres127!";
+
+      optionsBuilder.UseNpgsql(connectionString);
     }
   }
 }
